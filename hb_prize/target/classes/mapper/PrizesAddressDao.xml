@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hb.web.dao.PrizesAddressDao" >
+  <resultMap id="BaseResultMap" type="com.hb.web.bean.PrizesAddress" >
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="receivename" property="receivename" jdbcType="VARCHAR" />
+    <result column="receivephone" property="receivephone" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="prizename" property="prizename" jdbcType="VARCHAR" />
+    <result column="modifydate" property="modifydate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <select id="findPrizesAddress" resultType="java.util.Map">
+  	SELECT
+		t.userid,
+		t.username,
+		t.receivename,
+		t.receivephone,
+		t.address,
+		t.prizename,
+		t.modifydate
+	FROM
+		t_prize_address t
+	WHERE
+		1=1
+	<if test="prizes.dateStart != null and prizes.dateEnd != null">
+		AND t.modifydate BETWEEN #{prizes.dateStart} AND #{prizes.dateEnd}
+	</if>
+	<choose>
+		<when test="prizes.sortColumn != null and prizes.sortOrder != null">
+			ORDER BY concat('t.',${prizes.sortColumn}) ${prizes.sortOrder}
+		</when>
+		<otherwise>
+			ORDER BY t.modifydate desc
+		</otherwise>
+	</choose>
+  </select>
+  
+</mapper>
